@@ -78,48 +78,53 @@
     }
 @media print {
   @page {
-    size: 80mm auto; /* fuerza el ancho exacto */
-    margin: 0;       /* elimina todos los márgenes de la hoja */
+    size: auto;           /* se adapta al ancho del rollo */
+    margin: 0;            /* elimina márgenes por defecto del navegador */
   }
+
   html, body {
     margin: 0;
     padding: 0;
-    height: auto;
     background: #fff;
   }
+
   body * {
     visibility: hidden;
   }
+
   #ticketArea, #ticketArea * {
     visibility: visible;
   }
+
   #ticketArea {
-    display: block !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 80mm;
-    padding: 0;
-    margin: 0;
+    display: flex !important;
+    justify-content: center;  /* centra el ticket horizontalmente */
+    align-items: flex-start;  /* alinea arriba */
+    background: #fff;
+    padding-top: 4mm;         /* 🔹 pequeño margen superior */
   }
+
   #ticket {
-    width: 80mm;
-    font-size: 12px;
-    line-height: 1.2;
+    width: 58mm;              /* ancho estándar — cambia a 80mm si tu impresora es de 80mm */
+    font-size: 11px;
+    line-height: 1.25;
     font-family: monospace;
-    margin: 0;
+    background: #fff;
     padding: 0;
-    transform: translateY(0); /* fuerza a quedar arriba */
+    margin: 0 auto;
   }
+
   #ticket img {
-    max-width: 120px;
+    max-width: 100px;         /* se adapta a 58 mm o 80 mm */
     margin-bottom: 5px;
   }
+
   #ticket hr {
     border: none;
     border-top: 1px dashed #000;
     margin: 3px 0;
   }
+
   #ticket p, #ticket div, #ticket span {
     margin: 0;
     padding: 0;
