@@ -77,6 +77,14 @@
       display: none;
     }
 @media print {
+  @page {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+  }
   body * { visibility: hidden; }
   #ticketArea, #ticketArea * {
     visibility: visible;
@@ -93,6 +101,8 @@
     font-size: 12px;
     line-height: 1.2;
     font-family: monospace;
+    margin: 0;
+    padding-top: 0;
   }
   #ticket img {
     max-width: 120px;
@@ -101,7 +111,7 @@
   #ticket hr {
     border: none;
     border-top: 1px dashed #000;
-    margin: 4px 0;
+    margin: 3px 0;
   }
   #ticket p, #ticket div, #ticket span {
     margin: 0;
@@ -163,17 +173,8 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+      getFirestore, collection, getDocs, query, where, orderBy, limit
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // 🔹 Configuración Firebase
     const firebaseConfig = {
@@ -234,7 +235,7 @@
 
     btnBuscar.onclick = () => cargarTickets(inputBuscar.value.trim());
     btnTodos.onclick = () => cargarTickets();
-    
+
 tbody.addEventListener("click", async (e) => {
   const btn = e.target.closest("button[data-id]");
   if (!btn) return;
@@ -284,6 +285,7 @@ tbody.addEventListener("click", async (e) => {
   // 🖨️ Imprimir ticket
   window.print();
 });
+
     cargarTickets(); // primera carga
   </script>
 </body>
