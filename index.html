@@ -78,23 +78,29 @@
     }
 @media print {
   @page {
-    margin-top: 0;
-    margin-bottom: 0;
+    size: 80mm auto; /* fuerza el ancho exacto */
+    margin: 0;       /* elimina todos los márgenes de la hoja */
   }
-  body {
+  html, body {
     margin: 0;
     padding: 0;
+    height: auto;
+    background: #fff;
   }
-  body * { visibility: hidden; }
+  body * {
+    visibility: hidden;
+  }
   #ticketArea, #ticketArea * {
     visibility: visible;
   }
   #ticketArea {
     display: block !important;
-    position: relative;
-    background: #fff;
-    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80mm;
     padding: 0;
+    margin: 0;
   }
   #ticket {
     width: 80mm;
@@ -102,7 +108,8 @@
     line-height: 1.2;
     font-family: monospace;
     margin: 0;
-    padding-top: 0;
+    padding: 0;
+    transform: translateY(0); /* fuerza a quedar arriba */
   }
   #ticket img {
     max-width: 120px;
@@ -118,6 +125,7 @@
     padding: 0;
   }
 }
+
   </style>
 </head>
 <body>
