@@ -19,13 +19,8 @@
       justify-content: space-between;
       margin-bottom: 20px;
     }
-    header h1 {
-      color: #fff;
-      font-size: 20px;
-    }
-    header img {
-      height: 60px;
-    }
+    header h1 { color: #fff; font-size: 20px; }
+    header img { height: 60px; }
     .card {
       background: rgba(255, 255, 255, 0.9);
       padding: 16px;
@@ -34,81 +29,35 @@
       max-width: 800px;
       margin: auto;
     }
-    .filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
     input, button {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-family: inherit;
+      padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-family: inherit;
     }
     button {
-      background: #0c6cbd;
-      color: #fff;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
+      background: #0c6cbd; color: #fff; border: none; font-weight: 600; cursor: pointer;
     }
-    button:hover {
-      background: #094d85;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      font-size: 14px;
-    }
-    th {
-      background: #00416A;
-      color: #fff;
-    }
-    tr:nth-child(even) {
-      background: #f7f9fb;
-    }
-    #ticketArea {
-      display: none;
-    }
+    button:hover { background: #094d85; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background: #00416A; color: #fff; }
+    tr:nth-child(even) { background: #f7f9fb; }
+    #ticketArea { display: none; }
+
 @media print {
-  @page {
-    size: 80mm auto; /* o cámbialo a 58mm si es tu rollo */
-    margin: 0;
-  }
-
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #fff !important;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  body * {
-    visibility: hidden !important;
-  }
-
-  #ticketArea, #ticketArea * {
-    visibility: visible !important;
-  }
-
+  @page { size: 80mm auto; margin: 0; }
+  html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; height: 100%; overflow: hidden; }
+  body * { visibility: hidden !important; }
+  #ticketArea, #ticketArea * { visibility: visible !important; }
   #ticketArea {
     display: block !important;
     background: #fff !important;
     position: fixed !important;
-    top: 0 !important;       /* 👈 fuerza que empiece en el borde superior físico */
+    top: 0 !important;
     left: 50%;
-    transform: translateX(-50%); /* centra horizontalmente */
+    transform: translateX(-50%);
     margin: 0;
     padding: 0;
   }
-
   #ticket {
     width: 80mm;
     font-size: 12px;
@@ -117,24 +66,10 @@
     margin: 0;
     padding: 0;
   }
-
-  #ticket img {
-    max-width: 100px;
-    margin: 2px 0 5px 0;
-  }
-
-  #ticket hr {
-    border: none;
-    border-top: 1px dashed #000;
-    margin: 2px 0;
-  }
-
-  #ticket p, #ticket div, #ticket span {
-    margin: 0;
-    padding: 0;
-  }
+  #ticket img { max-width: 100px; margin: 2px 0 5px 0; }
+  #ticket hr { border: none; border-top: 1px dashed #000; margin: 2px 0; }
+  #ticket p, #ticket div, #ticket span { margin: 0; padding: 0; }
 }
-
   </style>
 </head>
 <body>
@@ -189,17 +124,9 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-   import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+      getFirestore, collection, getDocs, query, where, orderBy, limit, doc, getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // 🔹 Configuración Firebase
     const firebaseConfig = {
@@ -210,6 +137,7 @@
       messagingSenderId: "96242533231",
       appId: "1:96242533231:web:aae75a18fbaf9840529e9a"
     };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -218,6 +146,7 @@
     const btnBuscar = document.getElementById("btnBuscar");
     const btnTodos = document.getElementById("btnTodos");
 
+    // 🔹 Cargar tickets con total correcto
     async function cargarTickets(filtro = "") {
       tbody.innerHTML = "<tr><td colspan='5'>Cargando...</td></tr>";
 
@@ -228,7 +157,8 @@
       let data = [];
       snap.forEach(d => {
         const v = d.data();
-        data.push({ id: d.id, ...v });
+        const total = v.resumen_financiero?.total || 0;
+        data.push({ id: d.id, ...v, total });
       });
 
       if (filtro) {
@@ -251,7 +181,7 @@
           <td>${v.folio}</td>
           <td>${v.fecha_txt || ""}</td>
           <td>${v.cliente || "Mostrador"}</td>
-          <td>$${(v.total || 0).toFixed(2)}</td>
+          <td>$${v.total.toFixed(2)}</td>
           <td><button data-id="${v.id}" style="background:#00416A;color:#fff;">🖨️ Reimprimir</button></td>
         `;
         tbody.appendChild(tr);
@@ -261,57 +191,56 @@
     btnBuscar.onclick = () => cargarTickets(inputBuscar.value.trim());
     btnTodos.onclick = () => cargarTickets();
 
-tbody.addEventListener("click", async (e) => {
-  const btn = e.target.closest("button[data-id]");
-  if (!btn) return;
-  const id = btn.getAttribute("data-id");
+    // 🔹 Reimpresión del ticket
+    tbody.addEventListener("click", async (e) => {
+      const btn = e.target.closest("button[data-id]");
+      if (!btn) return;
+      const id = btn.getAttribute("data-id");
 
-  // 🔍 Obtener venta completa desde Firestore
-  const ref = doc(db, "rutas_venta", id);
-  const snap = await getDoc(ref);
+      const ref = doc(db, "rutas_venta", id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        alert("No se encontró la venta seleccionada.");
+        return;
+      }
 
-  if (!snap.exists()) {
-    alert("No se encontró la venta seleccionada.");
-    return;
-  }
+      const venta = snap.data();
 
-  const venta = snap.data();
+      document.getElementById("tFolio").textContent = `Folio: ${venta.folio || ""}`;
+      document.getElementById("tFecha").textContent = venta.fecha_txt || "";
+      document.getElementById("tCliente").textContent = `Cliente: ${venta.cliente || "Mostrador"}`;
 
-  // 🧾 Llenar ticket con la información real
-  document.getElementById("tFolio").textContent = `Folio: ${venta.folio || ""}`;
-  document.getElementById("tFecha").textContent = venta.fecha_txt || "";
-  document.getElementById("tCliente").textContent = `Cliente: ${venta.cliente || "Mostrador"}`;
-  document.getElementById("tTotal").textContent = `$${(venta.total || 0).toFixed(2)}`;
-  document.getElementById("tMetodo").textContent = venta.metodo_pago || "—";
-  document.getElementById("tAtendio").textContent = venta.atendio || "";
-  document.getElementById("tNotas").textContent = venta.notas || "";
-  
-  const cont = document.getElementById("tLineas");
-  cont.innerHTML = "";
+      const total = venta.resumen_financiero?.total || 0;
+      document.getElementById("tTotal").textContent = `$${total.toFixed(2)}`;
 
-  // 🧩 Mostrar los productos vendidos
-  if (venta.detalle && venta.detalle.length > 0) {
-    venta.detalle.forEach(it => {
-      const div = document.createElement("div");
-      div.style.display = "flex";
-      div.style.justifyContent = "space-between";
-      div.style.fontSize = "12px";
-      div.style.marginBottom = "3px";
-      div.innerHTML = `
-        <span>${it.cantidad.toFixed(2)} × ${it.nombre}</span>
-        <span>$${it.importe.toFixed(2)}</span>
-      `;
-      cont.appendChild(div);
+      document.getElementById("tMetodo").textContent = venta.metodo_pago || "—";
+      document.getElementById("tAtendio").textContent = venta.atendio || "";
+      document.getElementById("tNotas").textContent = venta.notas || "";
+
+      const cont = document.getElementById("tLineas");
+      cont.innerHTML = "";
+
+      if (venta.detalle && venta.detalle.length > 0) {
+        venta.detalle.forEach(it => {
+          const div = document.createElement("div");
+          div.style.display = "flex";
+          div.style.justifyContent = "space-between";
+          div.style.fontSize = "12px";
+          div.style.marginBottom = "3px";
+          div.innerHTML = `
+            <span>${it.cantidad.toFixed(2)} × ${it.nombre}</span>
+            <span>$${it.importe.toFixed(2)}</span>
+          `;
+          cont.appendChild(div);
+        });
+      } else {
+        cont.innerHTML = "<em>Sin productos registrados</em>";
+      }
+
+      window.print();
     });
-  } else {
-    cont.innerHTML = "<em>Sin productos registrados</em>";
-  }
 
-  // 🖨️ Imprimir ticket
-  window.print();
-});
-
-    cargarTickets(); // primera carga
+    cargarTickets(); // Primera carga
   </script>
 </body>
 </html>
